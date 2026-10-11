@@ -12,6 +12,7 @@ Ui.Panel {
   moduleName: "pinta365.ovpn"
   ipcTarget: "ovpn"
   manageIpc: false
+  property var providerService: null
   property var profiles: []
   property string error: ""
   property string connectUuid: ""
@@ -26,11 +27,11 @@ Ui.Panel {
   function attachService() {
     var shell = bar ? bar.shell : null
     var service = shell && shell.serviceFor ? shell.serviceFor("pinta365.ovpn") : null
-    if (service) service.settings = root.settings
+    if (service) { providerService = service; service.settings = root.settings }
   }
   onSettingsChanged: attachService()
   onBarChanged: attachService()
-  Timer { interval: 250; repeat: true; running: true; triggeredOnStart: true; onTriggered: root.attachService() }
+  Timer { interval: 250; repeat: true; running: root.providerService === null; triggeredOnStart: true; onTriggered: root.attachService() }
   function refresh() {
     if (inventory.running) return
     inventory.command = ["/usr/bin/python3", helper, "list"]
