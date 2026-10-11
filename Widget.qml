@@ -5,8 +5,8 @@ Item {
   id: root
   property var bar: null
   property string moduleName: "pinta365.ovpn"
-  property var settings: ({})
-  readonly property bool profileMode: settings.backend === "OpenVPN profiles"
+  property var settings: null
+  readonly property bool profileMode: settings !== null && settings.backend === "OpenVPN profiles"
   readonly property bool opened: page.item ? page.item.opened : false
   function open() { if (page.item) page.item.open() }
   function close() { if (page.item) page.item.close() }
@@ -17,7 +17,7 @@ Item {
   implicitHeight: page.item ? page.item.implicitHeight : 0
   Loader {
     id: page
-    active: root.bar !== null && root.settings.backend !== undefined
+    active: root.bar !== null && root.settings !== null
     source: root.profileMode ? "ProfilesPanel.qml" : "Panel.qml"
   }
   Binding { target: page.item; property: "navigationOwner"; value: root; when: page.item !== null }
